@@ -9,26 +9,27 @@ Object.create = Object.create || function (o) {
 
 function createSpec(child, parent){
     var parentPrototype;
-    
+
     if(!parent) {
         parent = Object;
     }
-    
+
     if(!parent.prototype) {
         parent.prototype = {};
     }
-    
+
     parentPrototype = parent.prototype;
-    
+
     child.prototype = Object.create(parent.prototype);
     child.prototype.__super__ = parentPrototype;
-    
+    child.__super__ = parent;
+
     // Yes, This is 'bad'. However, it runs once per Spec creation.
-    var spec = new Function("child", "return function " + child.name + "(){child.prototype.__super__.constructor.apply(this, arguments);return child.apply(this, arguments);}")(child);
-    
+    var spec = new Function("child", "return function " + child.name + "(){child.__super__.apply(this, arguments);return child.apply(this, arguments);}")(child);
+
     spec.prototype = child.prototype;
     spec.prototype.constructor = child.prototype.constructor = spec;
-    
+
     return spec;
 }
 
