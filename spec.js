@@ -29,6 +29,7 @@ function createSpec(child, parent){
 
     spec.prototype = child.prototype;
     spec.prototype.constructor = child.prototype.constructor = spec;
+    spec.__super__ = parent;
 
     return spec;
 }
